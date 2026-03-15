@@ -3,7 +3,7 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
+
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -51,12 +51,42 @@ where
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
         //TODO
-    }
+        match self.root{
+            //如果树是空的,创建root
+            None => self.root = Some(Box::new(TreeNode::new(value))),
+            //否则递归插入
+            Some(ref mut node) => node.insert(value),
+            }
+        }
+    
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
         //TODO
-        true
+        match self.root{
+            None => false,
+            Some(ref node) => {
+                let mut current = node;
+                loop{
+                    match value.cmp(&current.value){
+                        Ordering::Less=>{
+                            match current.left{
+                                Some(ref left) => current = left,
+                                None => return false,
+                            }
+                        }
+                        Ordering::Greater =>{
+                            match current.right{
+                                Some(ref right) => current = right,
+                                None => return false,
+
+                            }
+                        }
+                        Ordering::Equal => return true,
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -67,9 +97,24 @@ where
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
+        match value.cmp(&self.value){
+            Ordering::Less=> {
+                match self.left  {
+                    Some(ref mut left) => left.insert(value),
+                    None => self.left = Some(Box::new(TreeNode::new(value))),
+                }
+            }
+            Ordering::Greater=> {
+                match self.right  {
+                    Some(ref mut right) => right.insert(value),
+                    None => self.right = Some(Box::new(TreeNode::new(value))),
+                }
+            }
+            Ordering::Equal=> {}
+        }
+
     }
 }
-
 
 #[cfg(test)]
 mod tests {

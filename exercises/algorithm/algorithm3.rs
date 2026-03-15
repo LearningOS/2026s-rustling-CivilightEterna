@@ -3,10 +3,30 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
+
+fn sort<T: Ord>(array: &mut [T]){
 	//TODO
+    let n = array.len();
+    //长度小于2直接返回
+    if n < 2{
+        return;
+    }
+    //每一轮确定一个最大值
+    for i in 0..n {
+        let mut swapped = false;
+         let end = n - i - 1;
+         for j in 0..end {
+            if array[j] > array[j+1]{
+                array.swap(j, j+1);
+                swapped = true;
+            }
+         }
+         //提前结束优化
+         if !swapped{
+             break;
+         }
+    }
 }
 #[cfg(test)]
 mod tests {

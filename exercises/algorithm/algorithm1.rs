@@ -2,7 +2,7 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -70,14 +70,81 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+    where
+        T: Ord + Copy,
 	{
 		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		// Self {
+        //     length: 0,
+        //     start: None,
+        //     end: None,
+        // }
+        //创建结果链表
+        let mut result = LinkedList::new();
+
+        //pa 和 pb 分别为两个链表的起点
+        let mut pa = list_a.start;
+        let mut pb = list_b.start;
+
+        //当两个链表都还有节点时
+        while pa.is_some() && pb.is_some(){
+            unsafe
+            {
+                //取出节点指针
+                let a_ptr = pa.unwrap().as_ptr();
+                let b_ptr = pb.unwrap().as_ptr();
+
+                //取出节点的值
+                let a_val = (*a_ptr).val;
+                let b_val = (*b_ptr).val;
+
+                //比较两个值,把小的加入新链表
+                if a_val < b_val
+                {
+                    //把A当前值加入结果链表
+                    result.add(a_val);
+                    //A指针移到下一个节点
+                    pa = (*a_ptr).next;
+                }
+                else
+                {
+                    //把B当前的值加入结果链表
+                    result.add(b_val);
+
+                    //B指针移到下一个节点
+                    pb = (*b_ptr).next;
+                }
+            }
+        }  
+        //如果A还有剩余节点
+        while pa.is_some()
+        {
+            unsafe
+            {
+                let a_ptr = pa.unwrap().as_ptr();
+
+                //直接加入结果链表
+                result.add((*a_ptr).val);
+                //A指针移到下一个节点
+                pa = (*a_ptr).next;
+            }
         }
-	}
+        //如果B还有剩余节点
+        while pb.is_some()
+        {
+            unsafe
+            {
+                let b_ptr = pb.unwrap().as_ptr();
+
+                //直接加入结果链表
+                result.add((*b_ptr).val);
+                //B指针移到下一个节点
+                pb = (*b_ptr).next;
+            }
+        }
+        //返回结果链表
+        result 
+}
 }
 
 impl<T> Display for LinkedList<T>
